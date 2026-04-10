@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.env
+
+# Node
+node_modules/
+.expo/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend outputs
+MedicineTracker-main/backend/output_from_gpt.json
+MedicineTracker-main/backend/detected_text_output.txt
