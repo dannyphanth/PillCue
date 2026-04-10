@@ -1,11 +1,14 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
 import { OcrParseResponse } from "../types/medication";
 import CameraScreen from "../screens/CameraScreen";
 import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
 import MedicationScheduleScreen from "../screens/MedicationScheduleScreen";
 import OcrReviewScreen from "../screens/OcrReviewScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 import ScanBottleScreen from "../screens/ScanBottleScreen";
+import { useAuth } from "../context/AuthContext";
 
 function PillCueHeaderTitle() {
   return (
@@ -30,49 +33,72 @@ export type RootStackParamList = {
   MedicationSchedule: undefined;
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+export type AuthStackParamList = {
+  Login: undefined;
+  Register: undefined;
+};
 
-export default function AppNavigator() {
+const AppStack = createNativeStackNavigator<RootStackParamList>();
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+
+function AuthNavigator() {
   return (
-    <Stack.Navigator
+    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+      <AuthStack.Screen name="Login" component={LoginScreen} />
+      <AuthStack.Screen name="Register" component={RegisterScreen} />
+    </AuthStack.Navigator>
+  );
+}
+
+function AppNavigatorScreens() {
+  return (
+    <AppStack.Navigator
       screenOptions={{
         headerTintColor: "#183225",
-        headerTitleStyle: {
-          fontWeight: "700",
-        },
-        headerStyle: {
-          backgroundColor: "#ffffff",
-        },
-        contentStyle: {
-          backgroundColor: "#f6f7f3",
-        },
+        headerTitleStyle: { fontWeight: "700" },
+        headerStyle: { backgroundColor: "#ffffff" },
+        contentStyle: { backgroundColor: "#f6f7f3" },
       }}
     >
-      <Stack.Screen
+      <AppStack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerTitle: () => <PillCueHeaderTitle />, headerTitleAlign: "center" }}
       />
-      <Stack.Screen
+      <AppStack.Screen
         name="Camera"
         component={CameraScreen}
         options={{ title: "Scan Bottle", headerTransparent: true, headerTintColor: "#ffffff" }}
       />
-      <Stack.Screen
+      <AppStack.Screen
         name="ScanBottle"
         component={ScanBottleScreen}
         options={{ title: "Scan Bottle" }}
       />
-      <Stack.Screen
+      <AppStack.Screen
         name="OcrReview"
         component={OcrReviewScreen}
         options={{ title: "OCR Review" }}
       />
-      <Stack.Screen
+      <AppStack.Screen
         name="MedicationSchedule"
         component={MedicationScheduleScreen}
         options={{ title: "Medication Schedule" }}
       />
-    </Stack.Navigator>
+    </AppStack.Navigator>
   );
+}
+
+export default function AppNavigator() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f6f7f3" }}>
+        <ActivityIndicator size="large" color="#2f6b52" />
+      </View>
+    );
+  }
+
+  return user ? <AppNavigatorScreens /> : <AuthNavigator />;
 }
