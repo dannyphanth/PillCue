@@ -51,7 +51,7 @@ export default function OcrReviewScreen() {
     const medication = parsedMedicationToMedication(form);
     await addMedication(medication);
 
-    Alert.alert("Saved", "Medication added to your local schedule.", [
+    Alert.alert("Saved", "Medication added to your schedule.", [
       {
         text: "View Schedule",
         onPress: () => navigation.navigate("MedicationSchedule"),

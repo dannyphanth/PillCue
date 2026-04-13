@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import EmptyState from "../components/EmptyState";
 import MedicationCard from "../components/MedicationCard";
+import { useAuth } from "../context/AuthContext";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import {
   deleteMedication,
   getStoredMedications,
-  seedSampleMedicationsIfEmpty,
 } from "../services/storage/medicationStorage";
 import { Medication } from "../types/medication";
 import { getNextDose } from "../utils/schedule";
@@ -24,6 +24,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
 export default function HomeScreen() {
   const navigation = useNavigation<NavigationProp>();
+  const { signOut } = useAuth();
   const [medications, setMedications] = useState<Medication[]>([]);
 
   useFocusEffect(
@@ -31,8 +32,7 @@ export default function HomeScreen() {
       let active = true;
 
       async function loadData() {
-        const seeded = await seedSampleMedicationsIfEmpty();
-        const stored = seeded.length > 0 ? seeded : await getStoredMedications();
+        const stored = await getStoredMedications();
         if (active) {
           setMedications(stored);
         }
@@ -105,7 +105,7 @@ export default function HomeScreen() {
         {medications.length === 0 ? (
           <EmptyState
             title="No medications saved yet"
-            message="Scan a bottle or keep the sample data seeded for class demos."
+            message="Scan a prescription bottle to add your first medication."
           />
         ) : (
           medications.map((medication) => (
@@ -117,6 +117,10 @@ export default function HomeScreen() {
           ))
         )}
       </View>
+
+      <Pressable style={styles.signOutButton} onPress={signOut}>
+        <Text style={styles.signOutText}>Sign Out</Text>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -227,5 +231,15 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: 12,
+  },
+  signOutButton: {
+    alignItems: "center",
+    paddingVertical: 14,
+    marginTop: 8,
+  },
+  signOutText: {
+    color: "#8a3131",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

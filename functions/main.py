@@ -58,6 +58,8 @@ def normalize_result(payload: dict) -> dict:
     region="us-central1",
     memory=options.MemoryOption.MB_512,
     timeout_sec=60,
+    invoker="public",
+    secrets=["GEMINI_API_KEY"],
 )
 def parse_bottle_image(req: https_fn.CallableRequest) -> dict:
     images_b64: list[str] = req.data.get("images", [])
@@ -99,8 +101,24 @@ def parse_bottle_image(req: https_fn.CallableRequest) -> dict:
 
     parts.append(types.Part.from_text(text=prompt))
 
-    model_name = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
-    response = client.models.generate_content(model=model_name, contents=parts)
+    models_to_try = [
+        os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
+        "gemini-2.0-flash",
+    ]
+
+    last_error = None
+    for model_name in models_to_try:
+        try:
+            response = client.models.generate_content(model=model_name, contents=parts)
+            break
+        except Exception as model_err:
+            last_error = model_err
+            continue
+    else:
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.UNAVAILABLE,
+            message=f"Gemini unavailable: {last_error}",
+        )
 
     content = response.text.strip()
     cleaned = re.sub(r"```(?:json)?\s*([\s\S]*?)\s*```", r"\1", content).strip()

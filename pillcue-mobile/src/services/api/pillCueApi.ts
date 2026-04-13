@@ -1,12 +1,10 @@
-import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system/legacy";
 import { httpsCallable } from "firebase/functions";
 import { firebaseFunctions } from "../../config/firebase";
 import { OcrParseResponse } from "../../types/medication";
 
 async function imageUriToBase64(uri: string): Promise<string> {
-  return FileSystem.readAsStringAsync(uri, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
+  return FileSystem.readAsStringAsync(uri, { encoding: "base64" as any });
 }
 
 export async function visionParseBottleImage(imageUris: string[]): Promise<OcrParseResponse> {
