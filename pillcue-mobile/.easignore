@@ -1,0 +1,6 @@
+.expo
+node_modules
+.git
+functions
+MedicineTracker-main
+*.md

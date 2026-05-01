@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getReactNativePersistence, initializeAuth } from "firebase/auth";
+import { browserLocalPersistence, getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
+import { Platform } from "react-native";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
-// Paste your Firebase project config here after creating the project at console.firebase.google.com
 const firebaseConfig = {
   apiKey: "AIzaSyBA6lKJR2IFgLYo_1ejvTbJ3go8gboJfZ8",
   authDomain: "pillcue.firebaseapp.com",
@@ -17,7 +17,9 @@ const firebaseConfig = {
 
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = initializeAuth(firebaseApp, {
-  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+  persistence: Platform.OS === "web"
+    ? browserLocalPersistence
+    : getReactNativePersistence(ReactNativeAsyncStorage),
 });
 export const firestore = getFirestore(firebaseApp);
 export const firebaseFunctions = getFunctions(firebaseApp, "us-central1");

@@ -2,7 +2,7 @@
   "expo": {
     "name": "PillCue",
     "slug": "pillcue",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,10 +16,17 @@
     ],
     "android": {
       "package": "com.student.pillcue",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#173a2d"
       }
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7eae9a12-b4e8-410a-ba94-7a5cef0b0f7d"
+      }
+    },
+    "owner": "dannyphanthh"
   }
 }

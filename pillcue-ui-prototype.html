@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PillCue — UI Prototype</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1e3d12;
+    --green-mid:  #2d5a1b;
+    --green-card: #2f5c1e;
+    --amber:      #e8a020;
+    --amber-light:#f5b93a;
+    --bg:         #f4f6f0;
+    --white:      #ffffff;
+    --text-dark:  #1a1a1a;
+    --text-mid:   #444;
+    --text-light: #777;
+    --border:     #dde5d5;
+    --red:        #d94f4f;
+    --blue:       #3a7bd5;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #e8ece0;
+    min-height: 100vh;
+    padding: 40px 20px 60px;
+  }
+
+  h1.page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  p.page-sub {
+    text-align: center;
+    color: var(--text-mid);
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+
+  /* ── Flow arrows row ─────────────────────────────────── */
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    row-gap: 48px;
+  }
+
+  .flow-item {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .arrow {
+    font-size: 22px;
+    color: var(--amber);
+    margin: 0 6px;
+    font-weight: 700;
+    margin-top: 120px;
+  }
+
+  /* ── Phone frame ─────────────────────────────────── */
+  .phone {
+    width: 240px;
+    min-height: 480px;
+    background: var(--white);
+    border-radius: 36px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.22), inset 0 0 0 2px #bbb;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* notch */
+  .phone::before {
+    content: '';
+    display: block;
+    width: 70px; height: 14px;
+    background: #111;
+    border-radius: 0 0 12px 12px;
+    margin: 0 auto;
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .status-bar {
+    background: var(--white);
+    padding: 18px 16px 4px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .screen-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green-mid);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+
+  /* ── Screen content wrappers ── */
+  .screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    background: var(--white);
+    padding: 10px 14px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-title { font-size: 17px; font-weight: 800; color: var(--green-dark); }
+  .topbar-back { font-size: 18px; color: var(--green-dark); cursor: pointer; }
+  .topbar-icon { font-size: 16px; color: var(--green-dark); }
+
+  /* ── Bottom nav ── */
+  .bottom-nav {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 8px 0 12px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 9px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  .nav-item.active { color: var(--green-mid); }
+  .nav-icon { font-size: 16px; }
+
+  /* ── Scroll body ── */
+  .scroll-body {
+    flex: 1;
+    overflow: hidden;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+
+  /* ── Hero banner ── */
+  .hero-banner {
+    background: var(--green-card);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-text {
+    color: var(--white);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  .btn-amber {
+    background: var(--amber);
+    border: none;
+    border-radius: 30px;
+    padding: 8px 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--white);
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    border-radius: 30px;
+    padding: 7px 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--white);
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* ── Stats row ── */
+  .stats-row { display: flex; gap: 8px; }
+  .stat-card {
+    flex: 1;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .stat-label { font-size: 9px; color: var(--text-light); font-weight: 500; }
+  .stat-value { font-size: 22px; font-weight: 800; color: var(--green-dark); margin-top: 2px; }
+  .stat-sub { font-size: 9px; color: var(--text-light); }
+
+  /* ── Dose card ── */
+  .section-head {
+    font-size: 12px; font-weight: 700; color: var(--text-dark);
+    margin-bottom: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .dose-row {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .dose-row:last-child { border-bottom: none; }
+  .dose-name { font-size: 11px; font-weight: 700; color: var(--text-dark); }
+  .dose-sub  { font-size: 9px; color: var(--text-light); margin-top: 1px; }
+  .dose-badge {
+    font-size: 8px; font-weight: 700;
+    padding: 2px 6px; border-radius: 20px;
+    float: right; margin-top: -14px;
+  }
+  .badge-pending { background: #fff3cc; color: #b07a00; }
+  .badge-overdue { background: #fde8e8; color: var(--red); }
+  .badge-upcoming { background: #e8f0e0; color: var(--green-mid); }
+
+  /* ═══════════════════════════════════
+     SCREEN 2 — Login
+  ═══════════════════════════════════ */
+  .auth-screen {
+    flex: 1;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px 16px;
+    gap: 14px;
+  }
+  .auth-logo {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--green-dark);
+    margin-bottom: 4px;
+  }
+  .auth-logo span { color: var(--amber); }
+  .auth-tagline { text-align: center; font-size: 10px; color: var(--text-light); margin-bottom: 8px; }
+  .field-label { font-size: 10px; font-weight: 600; color: var(--text-dark); margin-bottom: 3px; }
+  .field-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: var(--text-mid);
+    background: var(--bg);
+  }
+  .btn-green {
+    width: 100%;
+    background: var(--green-mid);
+    color: var(--white);
+    border: none;
+    border-radius: 30px;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .auth-link { text-align: center; font-size: 10px; color: var(--text-light); }
+  .auth-link span { color: var(--green-mid); font-weight: 600; }
+
+  /* ═══════════════════════════════════
+     SCREEN 3 — Camera
+  ═══════════════════════════════════ */
+  .camera-body {
+    flex: 1;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0 0;
+    position: relative;
+  }
+  .camera-viewfinder {
+    width: 170px; height: 220px;
+    border: 2.5px solid var(--amber);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    margin-top: 10px;
+  }
+  .bottle-placeholder {
+    font-size: 56px;
+    opacity: 0.85;
+  }
+  .scan-label-text {
+    position: absolute; top: -18px;
+    font-size: 8px; font-weight: 700; letter-spacing: 1px;
+    color: var(--amber);
+  }
+  .camera-hint {
+    color: rgba(255,255,255,0.7);
+    font-size: 10px;
+    text-align: center;
+    padding: 10px 20px;
+  }
+  .camera-controls {
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 12px 0 16px;
+  }
+  .cam-ctrl-label { font-size: 8px; color: rgba(255,255,255,0.7); text-align: center; margin-top: 3px; }
+  .shutter {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .cam-side { display: flex; flex-direction: column; align-items: center; color: white; font-size: 18px; }
+
+  /* ═══════════════════════════════════
+     SCREEN 4 — OCR Review
+  ═══════════════════════════════════ */
+  .review-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 8px;
+  }
+  .review-input {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 11px;
+    color: var(--text-dark);
+    font-weight: 500;
+    background: var(--bg);
+  }
+  .review-input.highlight { border-color: var(--amber); background: #fffbf0; }
+  .ai-badge {
+    background: #e8f4e8;
+    color: var(--green-mid);
+    font-size: 8px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .row-2 { display: flex; gap: 6px; }
+  .row-2 > div { flex: 1; }
+
+  /* ═══════════════════════════════════
+     SCREEN 5 — Medications list
+  ═══════════════════════════════════ */
+  .med-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .med-icon { font-size: 22px; margin-right: 8px; }
+  .med-info { flex: 1; }
+  .med-name { font-size: 12px; font-weight: 700; color: var(--text-dark); }
+  .med-detail { font-size: 9px; color: var(--text-light); margin-top: 2px; }
+  .med-pills {
+    font-size: 9px; font-weight: 700; color: var(--green-mid);
+    background: #e8f0e0; padding: 2px 7px; border-radius: 20px;
+  }
+
+  /* ═══════════════════════════════════
+     SCREEN 6 — Schedule
+  ═══════════════════════════════════ */
+  .time-block { margin-bottom: 10px; }
+  .time-header {
+    font-size: 10px; font-weight: 700; color: var(--text-light);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 5px;
+  }
+  .sched-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sched-time {
+    font-size: 13px; font-weight: 800; color: var(--green-dark);
+    min-width: 38px;
+  }
+  .sched-info { flex: 1; }
+  .sched-name { font-size: 11px; font-weight: 600; color: var(--text-dark); }
+  .sched-sub  { font-size: 9px; color: var(--text-light); margin-top: 1px; }
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-amber  { background: var(--amber); }
+  .dot-red    { background: var(--red); }
+  .dot-green  { background: #5aad5a; }
+  .dot-gray   { background: #ccc; }
+
+  .fab {
+    position: absolute;
+    bottom: 56px; right: 14px;
+    width: 36px; height: 36px;
+    background: var(--amber);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-weight: 700;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    justify-content: center;
+    margin: 32px auto 0;
+    max-width: 700px;
+    padding: 16px 20px;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-mid); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">PillCue — Complete User Flow</h1>
+<p class="page-sub">High-fidelity UI prototype · 6 screens · End-to-end flow</p>
+
+<div class="flow-row">
+
+  <!-- ─── SCREEN 1: LOGIN ─────────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">① Login</div>
+      <div class="phone">
+        <div class="status-bar"><span>10:09</span><span>📶 84%</span></div>
+        <div class="auth-screen">
+          <div>
+            <div class="auth-logo">Pill<span>Cue</span></div>
+            <div class="auth-tagline">Your medication, simplified.</div>
+          </div>
+          <div>
+            <div class="field-label">Email</div>
+            <div class="field-input">emily@email.com</div>
+          </div>
+          <div>
+            <div class="field-label">Password</div>
+            <div class="field-input">••••••••</div>
+          </div>
+          <button class="btn-green">Sign In</button>
+          <div class="auth-link">Don't have an account? <span>Create one</span></div>
+          <div style="margin-top:6px;">
+            <div style="font-size:10px;font-weight:700;color:#aaa;text-align:center;margin-bottom:8px;">— OR —</div>
+            <div class="field-label">New here? Register</div>
+            <div class="field-input" style="margin-bottom:6px;">Full name</div>
+            <button class="btn-green" style="background:var(--amber);">Create Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- ─── SCREEN 2: HOME ─────────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">② Home</div>
+      <div class="phone" style="min-height:520px;">
+        <div class="status-bar"><span>10:09</span><span>📶 84%</span></div>
+        <div class="topbar"><span class="topbar-title">PillCue</span><span class="topbar-icon">🔔</span></div>
+        <div class="screen">
+          <div class="scroll-body">
+            <div class="hero-banner">
+              <div class="hero-text">Scan a bottle.<br>Review the label.<br>Stay on schedule.</div>
+              <button class="btn-amber">📷 Scan Bottle</button>
+              <button class="btn-outline">📅 View Schedule</button>
+            </div>
+            <div class="stats-row">
+              <div class="stat-card">
+                <div style="font-size:14px;">💊</div>
+                <div class="stat-label">Stored<br>Medications</div>
+                <div class="stat-value">3</div>
+              </div>
+              <div class="stat-card">
+                <div style="font-size:14px;">⏰</div>
+                <div class="stat-label">Next Dose</div>
+                <div class="stat-value" style="font-size:18px;">08:00</div>
+                <div class="stat-sub">Lisinopril</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="section-head">📋 Upcoming Doses</div>
+              <div class="dose-row">
+                <span class="dose-badge badge-pending">Pending</span>
+                <div class="dose-name">Lisinopril 10mg · twice daily</div>
+                <div class="dose-sub">Next: Today, 08:00 AM · 20 pills left</div>
+              </div>
+              <div class="dose-row">
+                <span class="dose-badge badge-overdue">Overdue</span>
+                <div class="dose-name">Metformin 500mg · once daily</div>
+                <div class="dose-sub">Was: Today, 07:00 AM · 15 pills left</div>
+              </div>
+              <div class="dose-row">
+                <span class="dose-badge badge-upcoming">Upcoming</span>
+                <div class="dose-name">Atorvastatin 20mg · once daily</div>
+                <div class="dose-sub">Next: Today, 9:00 PM · 28 pills left</div>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item active"><span class="nav-icon">🏠</span>Home</div>
+            <div class="nav-item"><span class="nav-icon">💊</span>Medications</div>
+            <div class="nav-item"><span class="nav-icon">📅</span>Schedule</div>
+            <div class="nav-item"><span class="nav-icon">👤</span>Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- ─── SCREEN 3: CAMERA ─────────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">③ Scan Bottle</div>
+      <div class="phone" style="min-height:520px;">
+        <div class="status-bar" style="background:#111;color:#ddd;"><span>10:09</span><span>📶 84%</span></div>
+        <div class="topbar" style="background:#111;border-color:#333;">
+          <span class="topbar-back" style="color:#fff;">‹</span>
+          <span class="topbar-title" style="color:#fff;">PillCue</span>
+          <span class="topbar-icon" style="color:#fff;">🖼</span>
+        </div>
+        <div class="camera-body">
+          <div class="camera-viewfinder">
+            <div class="scan-label-text">SCAN WINDOW</div>
+            <div class="bottle-placeholder">💊</div>
+          </div>
+          <div class="camera-hint">Frame the prescription label,<br>then tap <strong style="color:var(--amber);">Scan</strong></div>
+          <div class="camera-controls">
+            <div class="cam-side">
+              <span>👤+</span>
+              <div class="cam-ctrl-label">Add Manually</div>
+            </div>
+            <div class="shutter">📷</div>
+            <div class="cam-side">
+              <span>❓</span>
+              <div class="cam-ctrl-label">Help</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- ─── SCREEN 4: OCR REVIEW ─────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">④ Review &amp; Confirm</div>
+      <div class="phone" style="min-height:520px;">
+        <div class="status-bar"><span>10:09</span><span>📶 84%</span></div>
+        <div class="topbar">
+          <span class="topbar-back">‹</span>
+          <span class="topbar-title">Review Details</span>
+          <span></span>
+        </div>
+        <div class="screen">
+          <div class="scroll-body">
+            <div style="padding:6px 0 2px;">
+              <span class="ai-badge">✨ AI-extracted — please verify</span>
+            </div>
+            <div class="review-field">
+              <div class="field-label">Medication Name</div>
+              <div class="review-input highlight">Lisinopril</div>
+            </div>
+            <div class="review-field">
+              <div class="field-label">Dosage</div>
+              <div class="review-input highlight">10 mg</div>
+            </div>
+            <div class="row-2">
+              <div>
+                <div class="review-field">
+                  <div class="field-label">Pills per Dose</div>
+                  <div class="review-input">1</div>
+                </div>
+              </div>
+              <div>
+                <div class="review-field">
+                  <div class="field-label">Times per Day</div>
+                  <div class="review-input">2</div>
+                </div>
+              </div>
+            </div>
+            <div class="row-2">
+              <div>
+                <div class="review-field">
+                  <div class="field-label">Time 1</div>
+                  <div class="review-input">08:00</div>
+                </div>
+              </div>
+              <div>
+                <div class="review-field">
+                  <div class="field-label">Time 2</div>
+                  <div class="review-input">20:00</div>
+                </div>
+              </div>
+            </div>
+            <div class="review-field">
+              <div class="field-label">Quantity in Bottle</div>
+              <div class="review-input">30</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--white);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:11px;font-weight:600;color:var(--text-dark);">Already swallowed today?</div>
+              <div style="width:32px;height:18px;background:#ccc;border-radius:20px;position:relative;">
+                <div style="width:14px;height:14px;background:white;border-radius:50%;position:absolute;top:2px;left:2px;"></div>
+              </div>
+            </div>
+            <button class="btn-green" style="margin-top:4px;">Save Medication ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- ─── SCREEN 5: MEDICATIONS ─────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">⑤ My Medications</div>
+      <div class="phone" style="min-height:520px;position:relative;">
+        <div class="status-bar"><span>10:09</span><span>📶 84%</span></div>
+        <div class="topbar"><span class="topbar-title">Medications</span><span></span></div>
+        <div class="screen">
+          <div class="scroll-body">
+            <div class="med-card">
+              <span class="med-icon">💊</span>
+              <div class="med-info">
+                <div class="med-name">Lisinopril 10mg</div>
+                <div class="med-detail">Twice daily · 08:00, 20:00</div>
+                <div class="med-detail">30 pills remaining</div>
+              </div>
+              <span class="med-pills">30 left</span>
+            </div>
+            <div class="med-card">
+              <span class="med-icon">💊</span>
+              <div class="med-info">
+                <div class="med-name">Metformin 500mg</div>
+                <div class="med-detail">Once daily · 07:00</div>
+                <div class="med-detail">15 pills remaining</div>
+              </div>
+              <span class="med-pills">15 left</span>
+            </div>
+            <div class="med-card">
+              <span class="med-icon">💊</span>
+              <div class="med-info">
+                <div class="med-name">Atorvastatin 20mg</div>
+                <div class="med-detail">Once daily · 21:00</div>
+                <div class="med-detail">28 pills remaining</div>
+              </div>
+              <span class="med-pills">28 left</span>
+            </div>
+            <div style="text-align:center;margin-top:4px;">
+              <div style="font-size:10px;color:var(--text-light);">Tap a card to edit or remove</div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item"><span class="nav-icon">🏠</span>Home</div>
+            <div class="nav-item active"><span class="nav-icon">💊</span>Medications</div>
+            <div class="nav-item"><span class="nav-icon">📅</span>Schedule</div>
+            <div class="nav-item"><span class="nav-icon">👤</span>Profile</div>
+          </div>
+        </div>
+        <div class="fab">+</div>
+      </div>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <!-- ─── SCREEN 6: SCHEDULE ─────────────────── -->
+  <div class="flow-item">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+      <div class="screen-label">⑥ Schedule</div>
+      <div class="phone" style="min-height:520px;">
+        <div class="status-bar"><span>10:09</span><span>📶 84%</span></div>
+        <div class="topbar"><span class="topbar-title">Today's Schedule</span><span class="topbar-icon">📅</span></div>
+        <div class="screen">
+          <div class="scroll-body">
+            <div class="time-block">
+              <div class="time-header">⚠ Overdue</div>
+              <div class="sched-card">
+                <div class="dot dot-red"></div>
+                <div class="sched-time">7:00</div>
+                <div class="sched-info">
+                  <div class="sched-name">Metformin 500mg</div>
+                  <div class="sched-sub">1 pill · overdue by 1h 9min</div>
+                </div>
+                <span class="dose-badge badge-overdue">Overdue</span>
+              </div>
+            </div>
+            <div class="time-block">
+              <div class="time-header">🔔 Due Soon</div>
+              <div class="sched-card">
+                <div class="dot dot-amber"></div>
+                <div class="sched-time">8:00</div>
+                <div class="sched-info">
+                  <div class="sched-name">Lisinopril 10mg</div>
+                  <div class="sched-sub">1 pill · due in 51 min</div>
+                </div>
+                <span class="dose-badge badge-pending">Pending</span>
+              </div>
+            </div>
+            <div class="time-block">
+              <div class="time-header">📆 Later Today</div>
+              <div class="sched-card">
+                <div class="dot dot-green"></div>
+                <div class="sched-time">20:00</div>
+                <div class="sched-info">
+                  <div class="sched-name">Lisinopril 10mg</div>
+                  <div class="sched-sub">1 pill · evening dose</div>
+                </div>
+                <span class="dose-badge badge-upcoming">Upcoming</span>
+              </div>
+              <div class="sched-card">
+                <div class="dot dot-gray"></div>
+                <div class="sched-time">21:00</div>
+                <div class="sched-info">
+                  <div class="sched-name">Atorvastatin 20mg</div>
+                  <div class="sched-sub">1 pill · nightly dose</div>
+                </div>
+                <span class="dose-badge badge-upcoming">Upcoming</span>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-nav">
+            <div class="nav-item"><span class="nav-icon">🏠</span>Home</div>
+            <div class="nav-item"><span class="nav-icon">💊</span>Medications</div>
+            <div class="nav-item active"><span class="nav-icon">📅</span>Schedule</div>
+            <div class="nav-item"><span class="nav-icon">👤</span>Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end flow-row -->
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>Overdue dose</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Due soon</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#5aad5a"></div>Upcoming</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#ccc"></div>Scheduled (later)</div>
+  <div class="legend-item" style="font-style:italic;">① Login → ② Home → ③ Scan → ④ Review → ⑤ Medications → ⑥ Schedule</div>
+</div>
+
+</body>
+</html>

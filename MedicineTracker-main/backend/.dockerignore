@@ -1,6 +1,0 @@
-.venv/
-__pycache__/
-*.pyc
-.env
-output_from_gpt.json
-detected_text_output.txt
